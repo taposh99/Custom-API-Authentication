@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
-
+use App\Http\Controllers\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +26,18 @@ Route::post('login', [AuthController::class, 'login']);
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('logout', [AuthController::class, 'logout']);
 });
+
+
+Route::get('/event', [EventController::class, 'index']);
+
+// Get a specific meeting
+Route::get('/event/{id}', [EventController::class, 'show']);
+
+// Create a new meeting
+Route::post('/event', [EventController::class, 'store']);
+
+// Update a meeting
+Route::put('/event/{id}', [EventController::class, 'update']);
+
+// Delete a meeting
+Route::delete('/event/{id}', [EventController::class, 'destroy']);
