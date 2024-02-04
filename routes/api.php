@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AnnouncementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -41,3 +42,25 @@ Route::put('/event/{id}', [EventController::class, 'update']);
 
 // Delete a meeting
 Route::delete('/event/{id}', [EventController::class, 'destroy']);
+
+
+// Annoncement
+
+//announcement
+Route::get('/announcement', [AnnouncementController::class, 'index']);
+
+// Get a specific meeting
+Route::get('/announcement/{id}', [AnnouncementController::class, 'show']);
+
+// Create a new meeting
+Route::post('/announcement', [AnnouncementController::class, 'store']);
+
+// Update a meeting
+Route::put('/announcement/{id}', [AnnouncementController::class, 'update']);
+
+// Delete a meeting
+Route::delete('/announcement/{id}', [AnnouncementController::class, 'destroy']);
+
+
+Route::get('/upcoming-meetings', [EventController::class, 'upcomingMeetings']);
+Route::get('/previous-meetings', [EventController::class, 'previousMeetings']);

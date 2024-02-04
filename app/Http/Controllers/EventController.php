@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 class EventController extends Controller
 {
     public function index()
@@ -38,6 +39,9 @@ class EventController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image type and size
         ]);
 
+            $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
+
+
         // Handle image upload
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -62,5 +66,30 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
         $event->delete();
         return response()->json(null, 204);
+    }
+
+    // upcomingMeetings api
+    public function upcomingMeetings()
+    {
+        $currentDate = Carbon::now()->toDateString();
+
+        $upcomingMeetings = Event::where('event_date', '>=', $currentDate)
+            ->orderBy('event_date')
+            ->get();
+
+        return response()->json(['upcoming_meetings' => $upcomingMeetings]);
+    }
+
+
+    // previousMeetings api
+    public function previousMeetings()
+    {
+        $currentDate = Carbon::now()->toDateString();
+
+        $previousMeetings = Event::where('event_date', '<', $currentDate)
+            ->orderBy('event_date', 'desc')
+            ->get();
+
+        return response()->json(['previous_meetings' => $previousMeetings]);
     }
 }
