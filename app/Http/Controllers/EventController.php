@@ -6,6 +6,7 @@ use App\Models\Event;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+
 class EventController extends Controller
 {
     public function index()
@@ -39,7 +40,7 @@ class EventController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image type and size
         ]);
 
-            $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
+        $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
 
 
         // Handle image upload
@@ -92,11 +93,4 @@ class EventController extends Controller
 
         return response()->json(['previous_meetings' => $previousMeetings]);
     }
-    
-
-  
-   
-
-    
-
 }
