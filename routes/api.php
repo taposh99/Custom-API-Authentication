@@ -64,3 +64,11 @@ Route::delete('/announcement/{id}', [AnnouncementController::class, 'destroy']);
 
 Route::get('/upcoming-meetings', [EventController::class, 'upcomingMeetings']);
 Route::get('/previous-meetings', [EventController::class, 'previousMeetings']);
+
+
+
+
+
+
+
+

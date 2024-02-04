@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('month')->nullable();
-            $table->integer('date')->nullable();
+            $table->date('date')->nullable();
             $table->string('startTime')->nullable();
-            $table->string('meetingTopic')->nullable();
-            $table->string('meetingCreator')->nullable();
-            $table->string('meetingDiscussion')->nullable();
+            $table->text('meetingTopic')->nullable();
+            $table->text('meetingCreator')->nullable();
+            $table->text('meetingDiscussion')->nullable();
             $table->string('zoomLink')->nullable();
             $table->string('image')->nullable();
             $table->integer('status')->default(0)->nullable();

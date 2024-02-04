@@ -73,8 +73,8 @@ class EventController extends Controller
     {
         $currentDate = Carbon::now()->toDateString();
 
-        $upcomingMeetings = Event::where('event_date', '>=', $currentDate)
-            ->orderBy('event_date')
+        $upcomingMeetings = Event::where('date', '>=', $currentDate)
+            ->orderBy('date')
             ->get();
 
         return response()->json(['upcoming_meetings' => $upcomingMeetings]);
@@ -86,10 +86,17 @@ class EventController extends Controller
     {
         $currentDate = Carbon::now()->toDateString();
 
-        $previousMeetings = Event::where('event_date', '<', $currentDate)
-            ->orderBy('event_date', 'desc')
+        $previousMeetings = Event::where('date', '<', $currentDate)
+            ->orderBy('date', 'desc')
             ->get();
 
         return response()->json(['previous_meetings' => $previousMeetings]);
     }
+    
+
+  
+   
+
+    
+
 }

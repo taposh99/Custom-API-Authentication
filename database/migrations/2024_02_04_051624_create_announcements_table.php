@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('month')->nullable();
             $table->date('date')->nullable();
             $table->time('time')->nullable();
-            $table->string('meeting_topic')->nullable();
-            $table->string('meeting_creator')->nullable();
+            $table->text('meeting_topic')->nullable();
+            $table->text('meeting_creator')->nullable();
             $table->string('img')->nullable();
             $table->timestamps();
         });
