@@ -32,7 +32,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 Route::get('/event', [EventController::class, 'index']);
 
 // Get a specific meeting
-Route::get('/event/{id}', [EventController::class, 'show']);
+Route::get('/upcoming-meetings/{id}', [EventController::class, 'show']);
+Route::get('/previous-meetings/{id}', [EventController::class, 'showID']);
 
 // Create a new meeting
 Route::post('/event', [EventController::class, 'store']);
@@ -42,6 +43,9 @@ Route::put('/event/{id}', [EventController::class, 'update']);
 
 // Delete a meeting
 Route::delete('/event/{id}', [EventController::class, 'destroy']);
+
+Route::get('/upcoming-meetings', [EventController::class, 'upcomingMeetings']);
+Route::get('/previous-meetings', [EventController::class, 'previousMeetings']);
 
 
 // Annoncement
@@ -62,8 +66,9 @@ Route::put('/announcement/{id}', [AnnouncementController::class, 'update']);
 Route::delete('/announcement/{id}', [AnnouncementController::class, 'destroy']);
 
 
-Route::get('/upcoming-meetings', [EventController::class, 'upcomingMeetings']);
-Route::get('/previous-meetings', [EventController::class, 'previousMeetings']);
+
+
+
 
 
 

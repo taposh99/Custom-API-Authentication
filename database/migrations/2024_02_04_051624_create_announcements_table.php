@@ -18,7 +18,7 @@ return new class extends Migration
             $table->time('time')->nullable();
             $table->text('meeting_topic')->nullable();
             $table->text('meeting_creator')->nullable();
-            $table->string('img')->nullable();
+            $table->longText('img')->nullable();
             $table->timestamps();
         });
     }

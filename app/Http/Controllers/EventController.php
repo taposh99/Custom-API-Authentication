@@ -21,6 +21,12 @@ class EventController extends Controller
         return response()->json(['data' => $event]);
     }
 
+    public function showID($id)
+    {
+        $event = Event::findOrFail($id);
+        return response()->json(['data' => $event]);
+    }
+
     // public function store(Request $request)
     // {
     //     $meeting = Meeting::create($request->all());
