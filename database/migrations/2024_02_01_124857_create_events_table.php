@@ -13,15 +13,12 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->string('month')->nullable();
             $table->date('date')->nullable();
             $table->string('startTime')->nullable();
-            $table->text('meetingTopic')->nullable();
-            $table->text('meetingCreator')->nullable();
+            $table->string('endTime')->nullable();
+            $table->string('meetingTitle')->nullable();
             $table->text('meetingDiscussion')->nullable();
-            $table->string('zoomLink')->nullable();
-            $table->string('image')->nullable();
-            $table->integer('status')->default(0)->nullable();
+            $table->string('meetingLink')->nullable();
             $table->timestamps();
         });
     }

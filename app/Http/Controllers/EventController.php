@@ -27,39 +27,28 @@ class EventController extends Controller
         return response()->json(['data' => $event]);
     }
 
-    // public function store(Request $request)
-    // {
-    //     $meeting = Meeting::create($request->all());
-    //     return response()->json(['data' => $meeting], 201);
-    // }
-
     public function store(Request $request)
     {
         $data = $request->validate([
-            'month' => 'required|string',
-            'date' => 'required',
-            'startTime' => 'required',
-            'meetingTopic' => 'required|string',
-            'meetingCreator' => 'required|string',
-            'meetingDiscussion' => 'required|string',
-            'zoomLink' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image type and size
+            'date' => 'nullable|date',
+            'startTime' => 'nullable',
+            'endTime' => 'nullable',
+            'meetingTitle' => 'nullable|string',
+            'meetingDiscussion' => 'nullable',
+            'meetingLink' => 'nullable|string',
+
         ]);
 
+ // Convert startTime and endTime to GMT+6
+
+
         $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
-
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/event'), $imageName);
-            $data['image'] = 'images/meetings/' . $imageName;
-        }
 
         $event = Event::create($data);
         return response()->json(['data' => $event], 201);
     }
+
+    
 
     public function update(Request $request, $id)
     {

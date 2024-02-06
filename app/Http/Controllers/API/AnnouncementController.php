@@ -24,6 +24,8 @@ class AnnouncementController extends Controller
 
     public function store(Request $request)
     {
+
+      
         $data = $request->validate([
            
             'announcementTitle' => 'nullable|string',
