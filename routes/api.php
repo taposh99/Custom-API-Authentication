@@ -64,16 +64,3 @@ Route::put('/announcement/{id}', [AnnouncementController::class, 'update']);
 
 // Delete a meeting
 Route::delete('/announcement/{id}', [AnnouncementController::class, 'destroy']);
-
-
-
-
-
-
-
-
-
-
-
-
-

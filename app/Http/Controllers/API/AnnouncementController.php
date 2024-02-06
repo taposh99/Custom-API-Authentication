@@ -9,12 +9,12 @@ use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
 {
-
     public function index()
     {
-        $meetings = Announcement::all();
+        $meetings = Announcement::orderBy('created_at', 'desc')->get();
         return response()->json(['data' => $meetings]);
     }
+    
 
     public function show($id)
     {

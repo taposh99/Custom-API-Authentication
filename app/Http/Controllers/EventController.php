@@ -9,11 +9,18 @@ use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
+    // public function index()
+    // {
+    //     $events = Event::all();
+    //     return response()->json(['data' => $events]);
+    // }
+    
     public function index()
-    {
-        $events = Event::all();
-        return response()->json(['data' => $events]);
-    }
+{
+    $events = Event::orderBy('created_at', 'desc')->get();
+    return response()->json(['data' => $events]);
+}
+
 
     public function show($id)
     {
@@ -27,6 +34,13 @@ class EventController extends Controller
         return response()->json(['data' => $event]);
     }
 
+    // public function store(Request $request)
+    // {
+    //     $meeting = Meeting::create($request->all());
+    //     return response()->json(['data' => $meeting], 201);
+    // }
+
+   
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -39,7 +53,6 @@ class EventController extends Controller
 
         ]);
 
- // Convert startTime and endTime to GMT+6
 
 
         $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
@@ -48,7 +61,6 @@ class EventController extends Controller
         return response()->json(['data' => $event], 201);
     }
 
-    
 
     public function update(Request $request, $id)
     {
@@ -70,8 +82,8 @@ class EventController extends Controller
         $currentDate = Carbon::now()->toDateString();
 
         $upcomingMeetings = Event::where('date', '>=', $currentDate)
-            ->orderBy('date')
-            ->get();
+            ->orderBy('date', 'desc')->get();
+       
 
         return response()->json(['upcoming_meetings' => $upcomingMeetings]);
     }
@@ -83,8 +95,8 @@ class EventController extends Controller
         $currentDate = Carbon::now()->toDateString();
 
         $previousMeetings = Event::where('date', '<', $currentDate)
-            ->orderBy('date', 'desc')
-            ->get();
+            ->orderBy('date', 'desc')->get();
+         
 
         return response()->json(['previous_meetings' => $previousMeetings]);
     }
