@@ -25,11 +25,9 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'month' => 'nullable|string',
-            'date' => 'nullable',
-            'time' => 'nullable',
-            'meeting_topic' => 'nullable|string',
-            'meeting_creator' => 'nullable|string',
+           
+            'announcementTitle' => 'nullable|string',
+            'description' => 'nullable|string',
 
             'documents' => 'nullable|array',
             'documents.*' => 'file|mimes:jpeg,png,jpg,gif,pdf,docx,doc,pptx',

@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('announcements', function (Blueprint $table) {
             $table->id();
-            $table->string('month')->nullable();
-            $table->date('date')->nullable();
-            $table->time('time')->nullable();
-            $table->text('meeting_topic')->nullable();
-            $table->text('meeting_creator')->nullable();
+           
+            $table->text('announcementTitle')->nullable();
+            $table->text('description')->nullable();
             $table->longText('img')->nullable();
             $table->timestamps();
         });
