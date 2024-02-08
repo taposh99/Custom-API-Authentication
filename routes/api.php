@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AnnouncementController;
 use App\Http\Controllers\API\MeetingMinuteController;
+use App\Http\Controllers\API\PDFGeneratorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -68,3 +69,5 @@ Route::delete('/announcement/{id}', [AnnouncementController::class, 'destroy']);
 
 
 Route::post('meetingMinute', [MeetingMinuteController::class, 'storeMeetingMinutes']);
+
+Route::post('save-pdf', [PDFGeneratorController::class, 'generatePdf']);

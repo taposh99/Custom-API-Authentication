@@ -14,7 +14,7 @@ class MeetingMinuteController extends Controller
     {
         try {
             MeetingMinute::create([
-                'event_id' => $request->eventId,
+                'event_id' => $request->meetingId,
                 'notes' => $request->meetingMinutes
             ]);
 
@@ -22,6 +22,5 @@ class MeetingMinuteController extends Controller
             return sendErrorResponse('Something Went Wrong'. $exception->getMessage());
         }
         return sendSuccessResponse('Notes Added Successfully');
-
     }
 }
