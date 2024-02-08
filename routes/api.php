@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AnnouncementController;
+use App\Http\Controllers\API\MeetingMinuteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -64,3 +65,6 @@ Route::put('/announcement/{id}', [AnnouncementController::class, 'update']);
 
 // Delete a meeting
 Route::delete('/announcement/{id}', [AnnouncementController::class, 'destroy']);
+
+
+Route::post('meetingMinute', [MeetingMinuteController::class, 'storeMeetingMinutes']);
