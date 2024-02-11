@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('meetingTitle')->nullable();
             $table->text('meetingDiscussion')->nullable();
             $table->string('meetingLink')->nullable();
+       
             $table->timestamps();
         });
     }
