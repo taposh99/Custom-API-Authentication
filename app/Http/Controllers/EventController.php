@@ -13,19 +13,13 @@ use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
-    // public function index()
-    // {
-    //     $events = Event::all();
-    //     return response()->json(['data' => $events]);
-    // }
+   
 
     public function index()
     {
         $events = Event::orderBy('created_at', 'desc')->get();
         return response()->json(['data' => $events]);
     }
-
-
 
 
     public function MeetingAgenda($id)
@@ -37,6 +31,9 @@ class EventController extends Controller
             'meetingsDetailsData' => $meetingsDetails,
         ]);
     }
+
+    
+
     public function showMeetingAgenda()
     {
         $meetingsDetails = Event::with('meetingAgenda')->get();
@@ -49,23 +46,25 @@ class EventController extends Controller
 
 
 
+   
+
     public function show($id)
     {
-        $event = Event::findOrFail($id);
+        $event = Event::with('meetingAgenda') // Include the meetingAgenda relationship
+            ->findOrFail($id);
+    
         return response()->json(['data' => $event]);
     }
+    
 
     public function showID($id)
     {
-        $event = Event::findOrFail($id);
+        $event = Event::with('meetingAgenda')
+        ->findOrFail($id);
         return response()->json(['data' => $event]);
     }
 
-    // public function store(Request $request)
-    // {
-    //     $meeting = Meeting::create($request->all());
-    //     return response()->json(['data' => $meeting], 201);
-    // }
+
 
 
    
@@ -126,6 +125,7 @@ class EventController extends Controller
         $currentDate = Carbon::now()->toDateString();
 
         $upcomingMeetings = Event::where('date', '>=', $currentDate)
+        ->with('meetingAgenda')
             ->orderBy('date', 'desc')->get();
 
 
@@ -139,6 +139,7 @@ class EventController extends Controller
         $currentDate = Carbon::now()->toDateString();
 
         $previousMeetings = Event::where('date', '<', $currentDate)
+        ->with('meetingAgenda')
             ->orderBy('date', 'desc')->get();
 
 
