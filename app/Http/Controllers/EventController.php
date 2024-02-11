@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
+
+
 class EventController extends Controller
 {
     // public function index()
@@ -51,47 +53,28 @@ class EventController extends Controller
             'meetingTitle' => 'nullable|string',
             'meetingDiscussion' => 'nullable',
             'meetingLink' => 'nullable|string',
-            'agendas' => 'array', // Assuming agendas is an array in the request
-            'agendas.*.agendaTitle' => 'nullable|string',
-            'agendas.*.agendaDescription' => 'nullable',
-            'agendas.*.agendaDocument' => 'nullable|string',
-
         ]);
 
+        $agenda = $request->validate([
+            'agendaTitle' => 'nullable|string',
+            'agendaDescription' => 'nullable',
+            'agendaDocument' => 'nullable|string',
+        ]);
 
-
-        // $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
-
-        // $event = Event::create($data);
-
-        // $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
-
-        // $event = Event::create($data);
-
-        // // Create MeetingAgenda only if agenda fields are present in the request
-        // if (isset($data['agendaTitle']) || isset($data['agendaDescription']) || isset($data['agendaDocument'])) {
-        //     $agendaData = [
-        //         'agendaTitle' => $data['agendaTitle'],
-        //         'agendaDescription' => $data['agendaDescription'],
-        //         'agendaDocument' => $data['agendaDocument'],
-        //     ];
-
-        //     $event->meetingAgenda()->create($agendaData);
-        // }
 
         $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
         $event = Event::create($data);
 
-        // Create MeetingAgendas only if agenda fields are present in the request
-        if (isset($data['agendas']) && is_array($data['agendas'])) {
-            $agendasData = [];
-
-            foreach ($data['agendas'] as $agendaItem) {
-                $agendasData[] = new MeetingAgenda($agendaItem);
+        foreach ($request->agendaInfo as $agendaItem) {
+            // dd($agendaItem);
+                // Create a new MeetingAgenda instance and associate it with the event
+                $event->meetingAgenda()->create([
+                    'agendaTitle' => $agendaItem['agendaTitle'],
+                    'agendaDescription' => $agendaItem['agendaDescription'],
+                    'agendaDocument' => $agendaItem['agendaDocument']
+                ]);
             }
 
-            $event->meetingAgendas()->saveMany($agendasData);
-        }
         return response()->json(['data' => $event], 201);
     }
 
