@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\MeetingAgenda;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 
@@ -23,6 +24,29 @@ class EventController extends Controller
         $events = Event::orderBy('created_at', 'desc')->get();
         return response()->json(['data' => $events]);
     }
+
+
+
+
+    public function MeetingAgenda($id)
+    {
+        $meetingsDetails = Event::with('meetingAgenda')->findOrFail($id);
+
+        return response()->json([
+            'success' => true,
+            'meetingsDetailsData' => $meetingsDetails,
+        ]);
+    }
+    public function showMeetingAgenda()
+    {
+        $meetingsDetails = Event::with('meetingAgenda')->get();
+
+        return response()->json([
+            'success' => true,
+            'meetingsDetails' => $meetingsDetails,
+        ]);
+    }
+
 
 
     public function show($id)
@@ -44,39 +68,42 @@ class EventController extends Controller
     // }
 
 
+   
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'date' => 'nullable|date',
-            'startTime' => 'nullable',
-            'endTime' => 'nullable',
-            'meetingTitle' => 'nullable|string',
-            'meetingDiscussion' => 'nullable',
-            'meetingLink' => 'nullable|string',
-        ]);
+        
+            try {
+                    DB::beginTransaction();
+             $data = $request->validate([
+                    'date' => 'nullable|date',
+                    'startTime' => 'nullable',
+                    'endTime' => 'nullable',
+                    'meetingTitle' => 'nullable|string',
+                    'meetingDiscussion' => 'nullable',
+                    'meetingLink' => 'nullable|string',
+                 ]);
 
-        $agenda = $request->validate([
-            'agendaTitle' => 'nullable|string',
-            'agendaDescription' => 'nullable',
-            'agendaDocument' => 'nullable|string',
-        ]);
+            $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
+            $event = Event::create($data);
 
-
-        $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
-        $event = Event::create($data);
-
-        foreach ($request->agendaInfo as $agendaItem) {
-            // dd($agendaItem);
+            foreach ($request->agendaInfo as $agendaItem) {
+              
                 // Create a new MeetingAgenda instance and associate it with the event
                 $event->meetingAgenda()->create([
+                    'event_id' => $event->id,
                     'agendaTitle' => $agendaItem['agendaTitle'],
                     'agendaDescription' => $agendaItem['agendaDescription'],
-                    'agendaDocument' => $agendaItem['agendaDocument']
+                    // 'agendaDocument' => $agendaItem['agendaDocument']
                 ]);
             }
+            DB::commit();
+        } catch (Exception $exception) {
+           
+        }
 
         return response()->json(['data' => $event], 201);
     }
+
 
 
     public function update(Request $request, $id)

@@ -33,6 +33,12 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 Route::get('/event', [EventController::class, 'index']);
 
+
+Route::get('/MeetingDetails/{id}', [EventController::class, 'MeetingAgenda']);
+
+Route::get('/MeetingDetails', [EventController::class, 'showMeetingAgenda']);
+
+
 // Get a specific meeting
 Route::get('/upcoming-meetings/{id}', [EventController::class, 'show']);
 Route::get('/previous-meetings/{id}', [EventController::class, 'showID']);

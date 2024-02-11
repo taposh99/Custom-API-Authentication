@@ -18,6 +18,6 @@ class Event extends Model
 
     public function meetingAgenda()
     {
-        return $this->hasOne(MeetingAgenda::class);
+        return $this->hasMany(MeetingAgenda::class);
     }
 }
