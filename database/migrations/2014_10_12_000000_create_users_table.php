@@ -16,6 +16,12 @@ return new class extends Migration
             $table->string('api_token')->nullable();
             $table->string('name');
             $table->string('email')->unique();
+
+            $table->string('phone')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('designation')->nullable();
+            $table->string('address')->nullable();
+            
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
