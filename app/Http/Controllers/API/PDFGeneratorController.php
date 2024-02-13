@@ -15,6 +15,15 @@ use Illuminate\Support\Str;
 
 class PDFGeneratorController extends Controller
 {
+
+    
+
+    public function indexMeetingMinute()
+    {
+        $meetingsPdf = MeetingMinutesPDF::orderBy('created_at', 'desc')->get();
+        return response()->json(['data' => $meetingsPdf]);
+    }
+    
     public function generatePdf(Request $request): JsonResponse
     {
         try {

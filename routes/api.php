@@ -77,3 +77,6 @@ Route::delete('/announcement/{id}', [AnnouncementController::class, 'destroy']);
 Route::post('meetingMinute', [MeetingMinuteController::class, 'storeMeetingMinutes']);
 
 Route::post('save-pdf', [PDFGeneratorController::class, 'generatePdf']);
+
+Route::get('/meetingMinute', [PDFGeneratorController::class, 'indexMeetingMinute']);
+

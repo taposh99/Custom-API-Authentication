@@ -97,6 +97,7 @@ class EventController extends Controller
             }
             DB::commit();
         } catch (Exception $exception) {
+            DB::rollBack();
            
         }
 
