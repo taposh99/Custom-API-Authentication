@@ -10,11 +10,25 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+
+    public function users()
+    {
+        $users = User::orderBy('created_at', 'desc')->get();
+        return response()->json(['data' => $users]);
+    }
+    
     public function register(Request $request)
     {
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
+
+        $user->phone = $request->phone;
+        $user->company_name = $request->company_name;
+        $user->designation = $request->designation;
+        $user->address = $request->address;
+
+      
         $user->password = bcrypt($request->password);
         $user->save();
 

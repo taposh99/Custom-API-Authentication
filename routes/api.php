@@ -30,8 +30,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('logout', [AuthController::class, 'logout']);
 });
 
+Route::get('/users', [AuthController::class, 'users']);
 
 Route::get('/event', [EventController::class, 'index']);
+
 
 
 Route::get('/MeetingDetails/{id}', [EventController::class, 'MeetingAgenda']);
