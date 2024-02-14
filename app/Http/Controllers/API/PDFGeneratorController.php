@@ -15,23 +15,22 @@ use Illuminate\Support\Str;
 
 class PDFGeneratorController extends Controller
 {
-
     
-
     public function indexMeetingMinute()
     {
         $meetingsPdf = MeetingMinutesPDF::orderBy('created_at', 'desc')->get();
         return response()->json(['data' => $meetingsPdf]);
     }
-    
     public function generatePdf(Request $request): JsonResponse
     {
+        
+        
         try {
             DB::beginTransaction();
             $meetingNotes = MeetingMinute::with('event')->whereEvent_id($request->meetingId)->get();
             $data = ['meetingNotes' => $meetingNotes];
             $pdf = PDF::loadView('Notes.notes', $data);
-            $uniqueName = $meetingNotes->first()->event->meetingTitle . now()->format('Y-m-d-H-i-s') . '-' . Str::random(10) . '.pdf';
+            $uniqueName = str_replace(' ', '_', $meetingNotes->first()->event->meetingTitle) . now()->format('Y-m-d-H-i-s') . '-' . Str::random(10) . '.pdf';
             $pdfPath = 'meeting_notes/' . $uniqueName;
             if (!File::isDirectory(public_path('meeting_notes'))) {
                 File::makeDirectory(public_path('meeting_notes'), 0755, true); // true for recursive creation

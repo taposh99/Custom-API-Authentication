@@ -20,4 +20,6 @@ class Event extends Model
     {
         return $this->hasMany(MeetingAgenda::class);
     }
+
+  
 }

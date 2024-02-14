@@ -26,6 +26,7 @@ class AuthController extends Controller
         $user->phone = $request->phone;
         $user->company_name = $request->company_name;
         $user->designation = $request->designation;
+        $user->userStatus = $request->userStatus;
         $user->address = $request->address;
 
       

@@ -10,6 +10,14 @@ use Illuminate\Http\Request;
 
 class MeetingMinuteController extends Controller
 {
+
+    
+    public function getMinutes()
+    {
+        $Minutes = MeetingMinute::orderBy('created_at', 'desc')->get();
+        return response()->json(['data' => $Minutes]);
+    }
+
     public function storeMeetingMinutes(Request $request): JsonResponse
     {
         try {

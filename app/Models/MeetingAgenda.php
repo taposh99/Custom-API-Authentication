@@ -16,4 +16,10 @@ class MeetingAgenda extends Model
     {
         return $this->belongsTo(Event::class);
     }
+
+    public function subAgenda()
+    {
+
+        return $this->hasMany(SubAgenda::class);
+    }
 }

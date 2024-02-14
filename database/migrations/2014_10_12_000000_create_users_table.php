@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('company_name')->nullable();
             $table->string('designation')->nullable();
             $table->string('address')->nullable();
+            $table->string('userStatus')->nullable();
             
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

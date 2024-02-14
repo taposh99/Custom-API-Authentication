@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
-   
+
 
     public function index()
     {
@@ -32,7 +32,7 @@ class EventController extends Controller
         ]);
     }
 
-    
+
 
     public function showMeetingAgenda()
     {
@@ -46,59 +46,69 @@ class EventController extends Controller
 
 
 
-   
+
 
     public function show($id)
     {
         $event = Event::with('meetingAgenda') // Include the meetingAgenda relationship
             ->findOrFail($id);
-    
+
         return response()->json(['data' => $event]);
     }
-    
+
 
     public function showID($id)
     {
         $event = Event::with('meetingAgenda')
-        ->findOrFail($id);
+            ->findOrFail($id);
         return response()->json(['data' => $event]);
     }
 
 
 
 
-   
+
     public function store(Request $request)
     {
-        
-            try {
-                    DB::beginTransaction();
-             $data = $request->validate([
-                    'date' => 'nullable|date',
-                    'startTime' => 'nullable',
-                    'endTime' => 'nullable',
-                    'meetingTitle' => 'nullable|string',
-                    'meetingDiscussion' => 'nullable',
-                    'meetingLink' => 'nullable|string',
-                 ]);
+
+        try {
+            DB::beginTransaction();
+            $data = $request->validate([
+                'date' => 'nullable|date',
+                'startTime' => 'nullable',
+                'endTime' => 'nullable',
+                'meetingTitle' => 'nullable|string',
+                'meetingDiscussion' => 'nullable',
+                'meetingLink' => 'nullable|string',
+            ]);
 
             $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
             $event = Event::create($data);
 
             foreach ($request->agendaInfo as $agendaItem) {
-              
+
                 // Create a new MeetingAgenda instance and associate it with the event
-                $event->meetingAgenda()->create([
+                $meetingAgenda = $event->meetingAgenda()->create([
                     'event_id' => $event->id,
                     'agendaTitle' => $agendaItem['agendaTitle'],
                     'agendaDescription' => $agendaItem['agendaDescription'],
                     // 'agendaDocument' => $agendaItem['agendaDocument']
                 ]);
+                foreach ($agendaItem['subagendaInfo'] as $subagendaItem) {
+                    // Create a new MeetingAgenda instance and associate it with the event
+                    // dd($subagendaItem);
+                    $meetingAgenda->subAgenda()->create([
+                        'meeting_agenda_id' => $meetingAgenda->id,
+                        'subagendaTitle' => $subagendaItem['subagendaTitle'],
+                        'subagendaDescription' => $subagendaItem['subagendaDescription'],
+                        // 'subagendaDocument' => $subagendaItem['subagendaDocument']
+                    ]);
+                }
             }
             DB::commit();
         } catch (Exception $exception) {
             DB::rollBack();
-           
+            dd($exception);
         }
 
         return response()->json(['data' => $event], 201);
@@ -126,7 +136,7 @@ class EventController extends Controller
         $currentDate = Carbon::now()->toDateString();
 
         $upcomingMeetings = Event::where('date', '>=', $currentDate)
-        ->with('meetingAgenda')
+            ->with('meetingAgenda')
             ->orderBy('date', 'desc')->get();
 
 
@@ -140,7 +150,7 @@ class EventController extends Controller
         $currentDate = Carbon::now()->toDateString();
 
         $previousMeetings = Event::where('date', '<', $currentDate)
-        ->with('meetingAgenda')
+            ->with('meetingAgenda')
             ->orderBy('date', 'desc')->get();
 
 
