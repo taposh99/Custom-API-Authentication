@@ -130,30 +130,20 @@ class EventController extends Controller
         return response()->json(null, 204);
     }
 
-    // upcomingMeetings api
     public function upcomingMeetings()
     {
-        $currentDate = Carbon::now()->toDateString();
-
-        $upcomingMeetings = Event::where('date', '>=', $currentDate)
-            ->with('meetingAgenda')
-            ->orderBy('date', 'desc')->get();
-
-
+        $upcomingMeetings = Event::with('meetingAgenda')->get();
+    
         return response()->json(['upcoming_meetings' => $upcomingMeetings]);
     }
-
-
-    // previousMeetings api
+    
+    
     public function previousMeetings()
     {
-        $currentDate = Carbon::now()->toDateString();
-
-        $previousMeetings = Event::where('date', '<', $currentDate)
-            ->with('meetingAgenda')
-            ->orderBy('date', 'desc')->get();
-
-
+        $previousMeetings = Event::with('meetingAgenda')->get();
+    
         return response()->json(['previous_meetings' => $previousMeetings]);
     }
+    
+    
 }
