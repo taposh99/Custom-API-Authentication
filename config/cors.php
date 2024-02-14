@@ -15,11 +15,11 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://boardmeeting.flytesolutions.com/*'],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 

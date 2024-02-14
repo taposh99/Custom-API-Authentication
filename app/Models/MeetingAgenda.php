@@ -22,4 +22,7 @@ class MeetingAgenda extends Model
 
         return $this->hasMany(SubAgenda::class);
     }
+
+  
+    
 }

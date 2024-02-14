@@ -50,7 +50,7 @@ class EventController extends Controller
 
     public function show($id)
     {
-        $event = Event::with('meetingAgenda') // Include the meetingAgenda relationship
+        $event = Event::with('meetingAgenda.subAgenda') // Include the meetingAgenda relationship
             ->findOrFail($id);
 
         return response()->json(['data' => $event]);
@@ -59,7 +59,7 @@ class EventController extends Controller
 
     public function showID($id)
     {
-        $event = Event::with('meetingAgenda')
+        $event = Event::with('meetingAgenda.subAgenda')
             ->findOrFail($id);
         return response()->json(['data' => $event]);
     }
@@ -94,6 +94,7 @@ class EventController extends Controller
                     'agendaDescription' => $agendaItem['agendaDescription'],
                     // 'agendaDocument' => $agendaItem['agendaDocument']
                 ]);
+
                 foreach ($agendaItem['subagendaInfo'] as $subagendaItem) {
                     // Create a new MeetingAgenda instance and associate it with the event
                     // dd($subagendaItem);
@@ -130,17 +131,24 @@ class EventController extends Controller
         return response()->json(null, 204);
     }
 
+    // public function upcomingMeetings()
+    // {
+    //     $upcomingMeetings = Event::with('meetingAgenda','meetingAgenda')->get();
+    
+    //     return response()->json(['upcoming_meetings' => $upcomingMeetings]);
+    // }
+    
+
     public function upcomingMeetings()
     {
-        $upcomingMeetings = Event::with('meetingAgenda')->get();
+        $upcomingMeetings = Event::with('meetingAgenda.subAgenda')->get();
     
         return response()->json(['upcoming_meetings' => $upcomingMeetings]);
     }
     
-    
     public function previousMeetings()
     {
-        $previousMeetings = Event::with('meetingAgenda')->get();
+        $previousMeetings = Event::with('meetingAgenda.subAgenda')->get();
     
         return response()->json(['previous_meetings' => $previousMeetings]);
     }
