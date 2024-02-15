@@ -45,9 +45,6 @@ class EventController extends Controller
     }
 
 
-
-
-
     public function show($id)
     {
         $event = Event::with('meetingAgenda.subAgenda') // Include the meetingAgenda relationship
@@ -70,6 +67,7 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
+        $event = null;
 
         try {
             DB::beginTransaction();
@@ -92,7 +90,14 @@ class EventController extends Controller
                     'event_id' => $event->id,
                     'agendaTitle' => $agendaItem['agendaTitle'],
                     'agendaDescription' => $agendaItem['agendaDescription'],
+
                     // 'agendaDocument' => $agendaItem['agendaDocument']
+
+                    
+                    'poll_1' => $agendaItem['poll_1'] ?? null,
+                    'poll_2' => $agendaItem['poll_2'] ?? null,
+                    'poll_3' => $agendaItem['poll_3'] ?? null,
+                    'poll_4' => $agendaItem['poll_4'] ?? null,
                 ]);
 
                 foreach ($agendaItem['subagendaInfo'] as $subagendaItem) {
@@ -103,6 +108,12 @@ class EventController extends Controller
                         'subagendaTitle' => $subagendaItem['subagendaTitle'],
                         'subagendaDescription' => $subagendaItem['subagendaDescription'],
                         // 'subagendaDocument' => $subagendaItem['subagendaDocument']
+
+                        'poll_1' => $subagendaItem['poll_1'] ?? null,
+                        'poll_2' => $subagendaItem['poll_2'] ?? null,
+                        'poll_3' => $subagendaItem['poll_3'] ?? null,
+                        'poll_4' => $subagendaItem['poll_4'] ?? null,
+
                     ]);
                 }
             }

@@ -30,7 +30,7 @@ class PDFGeneratorController extends Controller
             $meetingNotes = MeetingMinute::with('event')->whereEvent_id($request->meetingId)->get();
             $data = ['meetingNotes' => $meetingNotes];
             $pdf = PDF::loadView('Notes.notes', $data);
-            $uniqueName = str_replace(' ', '_', $meetingNotes->first()->event->meetingTitle) . now()->format('Y-m-d-H-i-s') . '-' . Str::random(10) . '.pdf';
+            $uniqueName = str_replace(' ', ' ', $meetingNotes->first()->event->meetingTitle) . '.pdf';
             $pdfPath = 'meeting_notes/' . $uniqueName;
             if (!File::isDirectory(public_path('meeting_notes'))) {
                 File::makeDirectory(public_path('meeting_notes'), 0755, true); // true for recursive creation

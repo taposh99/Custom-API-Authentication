@@ -17,6 +17,12 @@ return new class extends Migration
             $table->string('agendaTitle')->nullable();
             $table->string('agendaDescription')->nullable();
             $table->string('agendaDocument')->nullable();
+
+            $table->string('poll_1')->nullable();
+            $table->string('poll_2')->nullable();
+            $table->string('poll_3')->nullable();
+            $table->string('poll_4')->nullable();
+           
             $table->timestamps();
         });
     }
