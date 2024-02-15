@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('subagendaDescription')->nullable();
             $table->text('subagendaDocument')->nullable();
 
-            
+        
             $table->string('poll_1')->nullable();
             $table->string('poll_2')->nullable();
             $table->string('poll_3')->nullable();
