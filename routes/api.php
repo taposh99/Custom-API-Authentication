@@ -32,6 +32,9 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 Route::get('/users', [AuthController::class, 'users']);
 
+Route::get('/users/{id}', [AuthController::class, 'usersShow']);
+
+
 Route::get('/event', [EventController::class, 'index']);
 
 
