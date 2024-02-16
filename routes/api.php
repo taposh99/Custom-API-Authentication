@@ -34,6 +34,9 @@ Route::get('/users', [AuthController::class, 'users']);
 
 Route::get('/users/{id}', [AuthController::class, 'usersShow']);
 
+Route::put('/users/{id}', [AuthController::class, 'updateStatus']);
+
+
 
 Route::get('/event', [EventController::class, 'index']);
 

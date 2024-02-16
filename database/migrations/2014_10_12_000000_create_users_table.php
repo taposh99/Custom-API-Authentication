@@ -23,7 +23,9 @@ return new class extends Migration
             $table->string('address')->nullable();
             // $table->string('userStatus')->nullable();
 
-            $table->enum('userStatus',['inactive','active'])->nullable()->default('inactive');
+
+
+            $table->enum('userStatus', ['active', 'inactive'])->default('inactive');
 
 
             

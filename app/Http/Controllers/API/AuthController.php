@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-
+    
 
 
     public function usersShow($id)
@@ -70,4 +70,21 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'You are successfully logged out'], 200);
     }
+
+
+    public function updateStatus(Request $request, $id)
+{
+    $user = User::findOrFail($id);
+
+    $currentStatus = $user->userStatus;
+
+    // Toggling the status dynamically
+    $newStatus = $currentStatus === 'active' ? 'inactive' : 'active';
+    
+    $user->userStatus = $newStatus;
+    $user->save();
+
+    return response()->json(['message' => 'User status updated to ' . $newStatus]);
+}
+
 }
