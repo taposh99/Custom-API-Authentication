@@ -64,78 +64,157 @@ class EventController extends Controller
 
 
 
+    // public function store(Request $request)
+    // {
+
+
+    //     $event = null;
+
+    //     try {
+    //         DB::beginTransaction();
+
+    //         $data = $request->validate([
+    //             'date' => 'nullable|date',
+    //             'startTime' => 'nullable',
+    //             'endTime' => 'nullable',
+    //             'meetingTitle' => 'nullable|string',
+    //             'meetingDiscussion' => 'nullable',
+    //             'meetingLink' => 'nullable|string',
+    //             // 'agendaDocument' => 'nullable|file|mimes:pdf|max:10240' // Adjust validation rules as needed
+
+    //         ]);
+
+
+    //         $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
+
+
+
+    //         $event = Event::create($data);
+
+    //         if (isset($request->agendaInfo) && is_array($request->agendaInfo)) {
+    //             foreach ($request->agendaInfo as $agendaItem) {
+    //                 $meetingAgenda = $event->meetingAgenda()->create([
+    //                     'event_id' => $event->id,
+    //                     'agendaTitle' => $agendaItem['agendaTitle'] ?? null,
+    //                     'agendaDescription' => $agendaItem['agendaDescription'] ?? null,
+    //                     'agendaDocument' => $agendaItem['agendaDocument'] ?? null,
+    //                 ]);
+    //                 // Handle agendaDocument upload and storage for each agendaItem
+    //                 if ($meetingAgenda && $meetingAgenda->agendaDocument && $meetingAgenda->agendaDocument->isValid()) {
+    //                     $file = $meetingAgenda->agendaDocument;
+    //                     $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+    //                     $storagePath = public_path('meetingsAgenda'); // Corrected the folder name
+
+    //                     // Move the file to the public path
+    //                     $file->move($storagePath, $filename);
+
+    //                     // Update data with stored file information
+    //                     $meetingAgenda->update(['agendaDocument' => $filename]);
+    //                 }
+
+
+    //                 if (isset($agendaItem['subagendaInfo']) && is_array($agendaItem['subagendaInfo'])) {
+    //                     foreach ($agendaItem['subagendaInfo'] as $subagendaItem) {
+    //                         $meetingAgenda->subAgenda()->create([
+    //                             'meeting_agenda_id' => $meetingAgenda->id,
+    //                             'subagendaTitle' => $subagendaItem['subagendaTitle'] ?? null,
+    //                             'subagendaDescription' => $subagendaItem['subagendaDescription'] ?? null,
+    //                             'subagendaDocument' => $subagendaItem['subagendaDocument'] ?? null,
+    //                         ]);
+    //                     }
+
+    //                 }
+    //             }
+    //         }
+
+    //         DB::commit();
+    //     } catch (Exception $exception) {
+    //         DB::rollBack();
+    //         // dd($exception);
+    //     }
+
+    //     return response()->json(['data' => $event], 201);
+    // }
+
+
     public function store(Request $request)
-    {
+{
+    $event = null;
 
+    try {
+        DB::beginTransaction();
 
-        $event = null;
+        $data = $request->validate([
+            'date' => 'nullable|date',
+            'startTime' => 'nullable',
+            'endTime' => 'nullable',
+            'meetingTitle' => 'nullable|string',
+            'meetingDiscussion' => 'nullable',
+            'meetingLink' => 'nullable|string',
+            // 'agendaDocument' => 'nullable|file|mimes:pdf|max:10240' // Adjust validation rules as needed
+        ]);
 
-        try {
-            DB::beginTransaction();
+        $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
 
-            $data = $request->validate([
-                'date' => 'nullable|date',
-                'startTime' => 'nullable',
-                'endTime' => 'nullable',
-                'meetingTitle' => 'nullable|string',
-                'meetingDiscussion' => 'nullable',
-                'meetingLink' => 'nullable|string',
-                // 'agendaDocument' => 'nullable|file|mimes:pdf|max:10240' // Adjust validation rules as needed
+        $event = Event::create($data);
 
-            ]);
+        if (isset($request->agendaInfo) && is_array($request->agendaInfo)) {
+            foreach ($request->agendaInfo as $agendaItem) {
+                $meetingAgenda = $event->meetingAgenda()->create([
+                    'event_id' => $event->id,
+                    'agendaTitle' => $agendaItem['agendaTitle'] ?? null,
+                    'agendaDescription' => $agendaItem['agendaDescription'] ?? null,
+                    'agendaDocument' => $agendaItem['agendaDocument'] ?? null,
+                ]);
 
+                // Handle agendaDocument upload and storage for each agendaItem
+                if ($meetingAgenda && $meetingAgenda->agendaDocument && $meetingAgenda->agendaDocument->isValid()) {
+                    $file = $meetingAgenda->agendaDocument;
+                    $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                    $storagePath = public_path('meetingsAgenda'); // Corrected the folder name
 
-            $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
+                    // Move the file to the public path
+                    $file->move($storagePath, $filename);
 
+                    // Update data with stored file information
+                    $meetingAgenda->update(['agendaDocument' => $filename]);
+                }
 
+                if (isset($agendaItem['subagendaInfo']) && is_array($agendaItem['subagendaInfo'])) {
+                    foreach ($agendaItem['subagendaInfo'] as $subagendaItem) {
+                        $subAgenda=$meetingAgenda->subAgenda()->create([
+                            'meeting_agenda_id' => $meetingAgenda->id,
+                            'subagendaTitle' => $subagendaItem['subagendaTitle'] ?? null,
+                            'subagendaDescription' => $subagendaItem['subagendaDescription'] ?? null,
+                            'subagendaDocument' => $subagendaItem['subagendaDocument'] ?? null,
+                        ]);
+                          // Handle subagendaDocument upload and storage for each subagendaItem
+                          if ($subAgenda && $subAgenda->subagendaDocument && $subAgenda->subagendaDocument->isValid()) {
+                            $file = $subAgenda->subagendaDocument;
+                            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                            $storagePath = public_path('submeetingsAgenda'); // Corrected the folder name
 
-            $event = Event::create($data);
+                            // Move the file to the public path
+                            $file->move($storagePath, $filename);
 
-            if (isset($request->agendaInfo) && is_array($request->agendaInfo)) {
-                foreach ($request->agendaInfo as $agendaItem) {
-                    $meetingAgenda = $event->meetingAgenda()->create([
-                        'event_id' => $event->id,
-                        'agendaTitle' => $agendaItem['agendaTitle'] ?? null,
-                        'agendaDescription' => $agendaItem['agendaDescription'] ?? null,
-                        'agendaDocument' => $agendaItem['agendaDocument'] ?? null,
-                    ]);
-                    // Handle agendaDocument upload and storage for each agendaItem
-                    if ($meetingAgenda && $meetingAgenda->agendaDocument && $meetingAgenda->agendaDocument->isValid()) {
-                        $file = $meetingAgenda->agendaDocument;
-                        $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-                        $storagePath = public_path('meetingsAgenda'); // Corrected the folder name
-
-                        // Move the file to the public path
-                        $file->move($storagePath, $filename);
-
-                        // Update data with stored file information
-                        $meetingAgenda->update(['agendaDocument' => $filename]);
-                    }
-
-
-                    if (isset($agendaItem['subagendaInfo']) && is_array($agendaItem['subagendaInfo'])) {
-                        foreach ($agendaItem['subagendaInfo'] as $subagendaItem) {
-                            $meetingAgenda->subAgenda()->create([
-                                'meeting_agenda_id' => $meetingAgenda->id,
-                                'subagendaTitle' => $subagendaItem['subagendaTitle'] ?? null,
-                                'subagendaDescription' => $subagendaItem['subagendaDescription'] ?? null,
-                                'subagendaDocument' => $subagendaItem['subagendaDocument'] ?? null,
-                            ]);
-
-                            
+                            // Update data with stored file information
+                            $subAgenda->update(['subagendaDocument' => $filename]);
                         }
+
+                      
                     }
                 }
             }
-
-            DB::commit();
-        } catch (Exception $exception) {
-            DB::rollBack();
-            // dd($exception);
         }
 
-        return response()->json(['data' => $event], 201);
+        DB::commit();
+    } catch (Exception $exception) {
+        DB::rollBack();
+        // Handle exception...
     }
+
+    return response()->json(['data' => $event], 201);
+}
 
 
 
