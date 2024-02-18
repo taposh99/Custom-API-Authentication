@@ -64,78 +64,6 @@ class EventController extends Controller
 
 
 
-    // public function store(Request $request)
-    // {
-
-
-    //     $event = null;
-
-    //     try {
-    //         DB::beginTransaction();
-
-    //         $data = $request->validate([
-    //             'date' => 'nullable|date',
-    //             'startTime' => 'nullable',
-    //             'endTime' => 'nullable',
-    //             'meetingTitle' => 'nullable|string',
-    //             'meetingDiscussion' => 'nullable',
-    //             'meetingLink' => 'nullable|string',
-    //             // 'agendaDocument' => 'nullable|file|mimes:pdf|max:10240' // Adjust validation rules as needed
-
-    //         ]);
-
-
-    //         $data['date'] = Carbon::createFromFormat('Y-m-d', $data['date'])->format('Y-m-d');
-
-
-
-    //         $event = Event::create($data);
-
-    //         if (isset($request->agendaInfo) && is_array($request->agendaInfo)) {
-    //             foreach ($request->agendaInfo as $agendaItem) {
-    //                 $meetingAgenda = $event->meetingAgenda()->create([
-    //                     'event_id' => $event->id,
-    //                     'agendaTitle' => $agendaItem['agendaTitle'] ?? null,
-    //                     'agendaDescription' => $agendaItem['agendaDescription'] ?? null,
-    //                     'agendaDocument' => $agendaItem['agendaDocument'] ?? null,
-    //                 ]);
-    //                 // Handle agendaDocument upload and storage for each agendaItem
-    //                 if ($meetingAgenda && $meetingAgenda->agendaDocument && $meetingAgenda->agendaDocument->isValid()) {
-    //                     $file = $meetingAgenda->agendaDocument;
-    //                     $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-    //                     $storagePath = public_path('meetingsAgenda'); // Corrected the folder name
-
-    //                     // Move the file to the public path
-    //                     $file->move($storagePath, $filename);
-
-    //                     // Update data with stored file information
-    //                     $meetingAgenda->update(['agendaDocument' => $filename]);
-    //                 }
-
-
-    //                 if (isset($agendaItem['subagendaInfo']) && is_array($agendaItem['subagendaInfo'])) {
-    //                     foreach ($agendaItem['subagendaInfo'] as $subagendaItem) {
-    //                         $meetingAgenda->subAgenda()->create([
-    //                             'meeting_agenda_id' => $meetingAgenda->id,
-    //                             'subagendaTitle' => $subagendaItem['subagendaTitle'] ?? null,
-    //                             'subagendaDescription' => $subagendaItem['subagendaDescription'] ?? null,
-    //                             'subagendaDocument' => $subagendaItem['subagendaDocument'] ?? null,
-    //                         ]);
-    //                     }
-
-    //                 }
-    //             }
-    //         }
-
-    //         DB::commit();
-    //     } catch (Exception $exception) {
-    //         DB::rollBack();
-    //         // dd($exception);
-    //     }
-
-    //     return response()->json(['data' => $event], 201);
-    // }
-
 
     public function store(Request $request)
 {
@@ -165,6 +93,11 @@ class EventController extends Controller
                     'agendaTitle' => $agendaItem['agendaTitle'] ?? null,
                     'agendaDescription' => $agendaItem['agendaDescription'] ?? null,
                     'agendaDocument' => $agendaItem['agendaDocument'] ?? null,
+
+                    'poll_1' => $agendaItem['poll_1'] ?? null,
+                    'poll_2' => $agendaItem['poll_2'] ?? null,
+                    'poll_3' => $agendaItem['poll_3'] ?? null,
+                    'poll_4' => $agendaItem['poll_4'] ?? null,
                 ]);
 
                 // Handle agendaDocument upload and storage for each agendaItem
@@ -187,6 +120,11 @@ class EventController extends Controller
                             'subagendaTitle' => $subagendaItem['subagendaTitle'] ?? null,
                             'subagendaDescription' => $subagendaItem['subagendaDescription'] ?? null,
                             'subagendaDocument' => $subagendaItem['subagendaDocument'] ?? null,
+
+                            'poll_1' => $subagendaItem['poll_1'] ?? null,
+                            'poll_2' => $subagendaItem['poll_2'] ?? null,
+                            'poll_3' => $subagendaItem['poll_3'] ?? null,
+                            'poll_4' => $subagendaItem['poll_4'] ?? null,
                         ]);
                           // Handle subagendaDocument upload and storage for each subagendaItem
                           if ($subAgenda && $subAgenda->subagendaDocument && $subAgenda->subagendaDocument->isValid()) {
