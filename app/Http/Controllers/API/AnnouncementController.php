@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
 use Carbon\Carbon;
+use Faker\Core\File;
 use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
@@ -21,39 +22,86 @@ class AnnouncementController extends Controller
         $meeting = Announcement::findOrFail($id);
         return response()->json(['data' => $meeting]);
     }
+   
 
-    public function store(Request $request)
-    {
+public function store(Request $request)
+{
+    $data = $request->validate([
+        'announcementTitle' => 'nullable|string',
+        'description' => 'nullable|string',
+        'img' => 'nullable|file|mimes:jpeg,png,pdf', // Accepts both images and PDFs
+        'documents' => 'nullable|array',
+        'documents.*' => 'file|mimes:pdf', // Only accepts PDF files for documents
+    ]);
 
-      
-        $data = $request->validate([
-           
-            'announcementTitle' => 'nullable|string',
-            'description' => 'nullable|string',
+    // Handle file upload for 'img' field (either image or PDF)
+    if ($request->hasFile('img')) {
+        $file = $request->file('img');
+        $fileName = time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('images/meetings'), $fileName);
+        $data['img'] = 'images/meetings/' . $fileName;
+    }
 
-            'documents' => 'nullable|array',
-            'documents.*' => 'file|mimes:jpeg,png,jpg,gif,pdf,docx,doc,pptx',
-        ]);
+    // Handle PDF uploads for 'documents' field
+    if ($request->hasFile('documents')) {
+        $pdfs = [];
 
-        // Handle image upload
-        if ($request->hasFile('img')) {
-            $image = $request->file('img');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/meetings'), $imageName);
-            $data['img'] = 'images/meetings/' . $imageName;
+        foreach ($request->file('documents') as $pdf) {
+            $pdfName = time() . '.' . $pdf->getClientOriginalExtension();
+            $pdf->move(public_path('images/meetings'), $pdfName);
+            $pdfs[] = 'images/meetings/' . $pdfName;
         }
 
-        $meeting = Announcement::create($data);
-        return response()->json(['data' => $meeting], 201);
+        $data['documents'] = $pdfs;
     }
 
-    
+    $meeting = Announcement::create($data);
+    return response()->json(['data' => $meeting], 201);
+}
+
+
+
+
     public function update(Request $request, $id)
-    {
-        $meeting = Announcement::findOrFail($id);
-        $meeting->update($request->all());
-        return response()->json(['data' => $meeting]);
+{
+    $meeting = Announcement::findOrFail($id);
+
+    $data = $request->validate([
+        'announcementTitle' => 'nullable|string',
+        'description' => 'nullable|string',
+        'img' => 'nullable|file|mimes:jpeg,png,pdf', // Accepts both images and PDFs
+        'documents' => 'nullable|array',
+        'documents.*' => 'file|mimes:pdf', // Only accepts PDF files for documents
+    ]);
+
+    // Handle file upload for 'img' field (either image or PDF)
+    if ($request->hasFile('img')) {
+        $file = $request->file('img');
+        $fileName = time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('images/meetings'), $fileName);
+        $data['img'] = 'images/meetings/' . $fileName;
     }
+
+    // Handle PDF uploads for 'documents' field
+    if ($request->hasFile('documents')) {
+        $pdfs = [];
+
+        foreach ($request->file('documents') as $pdf) {
+            $pdfName = time() . '.' . $pdf->getClientOriginalExtension();
+            $pdf->move(public_path('images/meetings'), $pdfName);
+            $pdfs[] = 'images/meetings/' . $pdfName;
+        }
+
+        $data['documents'] = $pdfs;
+    }
+
+    $meeting->update($data);
+
+    return response()->json(['data' => $meeting]);
+}
+
+    
+    
 
     public function destroy($id)
     {
